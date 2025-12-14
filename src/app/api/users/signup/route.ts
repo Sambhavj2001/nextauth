@@ -2,20 +2,21 @@ import { connectDB } from "@/dbConfig/dbConfig";
 import User from "@/modals/userModal";
 import bcrypt from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
-import { error, log } from "console";
+import { log } from "console";
 import { sendEmail } from "@/utils/mailer";
 
 // Connect to Database
-connectDB();
+// connectDB();  // Remove this
 
 export async function POST(request: NextRequest) {
     try {
+        await connectDB();  // Add this here
         const { username, email, password } = await request.json();
         log({ username, email, password });
         // Check if user already exists
-        const existingUser = await User.find({ email });
+        const existingUser = await User.findOne({ email });
 
-        if (existingUser.length > 0) {
+        if (existingUser) {
             return NextResponse.json({ message: "User already exists" }, { status: 400 });
         }
 

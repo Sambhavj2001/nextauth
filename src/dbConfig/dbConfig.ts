@@ -2,12 +2,13 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 
 dotenv.config();    
+mongoose.set('strictQuery', false);
 
 const MONGO_URI = process.env.MONGO_URI || '';
 
 export const connectDB = async () => {  
     try {       
-        mongoose.connect(MONGO_URI);
+        await mongoose.connect(MONGO_URI);
 
         const db = mongoose.connection; 
         db.on('connected', () => {
